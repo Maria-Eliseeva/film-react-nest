@@ -46,9 +46,7 @@ export class FilmsMongoDbRepository
   implements FilmsRepository {
   private filmModel: Model<FilmDTO>;
 
-  constructor(
-    private connection: Mongoose,
-  ) {
+  constructor(private connection: Mongoose) {
     this.filmModel = this.connection.model<FilmDTO>( 'Film', FilmSchema);
   }
 

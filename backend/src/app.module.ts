@@ -4,10 +4,11 @@ import { ConfigModule } from "@nestjs/config";
 import * as path from "node:path";
 
 import { configProvider } from "./app.config.provider";
+import { databaseProvider } from './database/database.provider';
 import { FilmsModule } from './films/films.module';
 import { OrderService } from './order/order.service';
 import { OrderController } from './order/order.controller';
-import { FilmsRepository } from './repository/films.repository/films';
+
 
 @Module({
   imports: [
@@ -22,6 +23,6 @@ import { FilmsRepository } from './repository/films.repository/films';
     FilmsModule
   ],
   controllers: [OrderController],
-  providers: [configProvider, OrderService, FilmsRepository],
+  providers: [configProvider, databaseProvider, OrderService],
 })
 export class AppModule { }

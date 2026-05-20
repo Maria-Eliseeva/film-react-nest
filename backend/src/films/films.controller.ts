@@ -1,17 +1,18 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
 import { FilmsService } from './films.service';
+import { FilmDTO, ScheduleDTO } from './dto/films.dto';
 
 @Controller('films')
 export class FilmsController {
   constructor(private readonly filmsService: FilmsService) {}
 
   @Get()
-  findAll(): FilmDTO[] {
+  async findAll(): Promise<FilmDTO[]> {
     return this.filmsService.findAll();
   }
 
   @Get(':id/schedule')
-  findSchedule(@Param('id') id: string): FilmDTO {
+  async findSchedule(@Param('id') id: string): Promise<ScheduleDTO[]> {
     return this.filmsService.findSchedule(id);
   }
 }
