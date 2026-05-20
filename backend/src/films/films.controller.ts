@@ -7,8 +7,8 @@ export class FilmsController {
   constructor(private readonly filmsService: FilmsService) {}
 
   @Get()
-  async findAll(): Promise<FilmDTO[]> {
-    return this.filmsService.findAll();
+  async findAll() {
+    return 'Hello world';
   }
 
   @Get(':id/schedule')

@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
-import mongoose, {
-  Mongoose,
+import {
+  Connection,
   Schema,
   Model,
 } from 'mongoose';
@@ -45,9 +45,8 @@ export interface FilmsRepository {
 export class FilmsMongoDbRepository
   implements FilmsRepository {
   private filmModel: Model<FilmDTO>;
-
-  constructor(private connection: Mongoose) {
-    this.filmModel = this.connection.model<FilmDTO>( 'Film', FilmSchema);
+  constructor(@Inject('DATABASE_CONNECTION') private connection: Connection) {
+    this.filmModel = this.connection.model<FilmDTO>('Film', FilmSchema);
   }
 
   async findAll(): Promise<FilmDTO[]> {
