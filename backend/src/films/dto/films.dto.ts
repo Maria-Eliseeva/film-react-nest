@@ -1,7 +1,7 @@
-export interface ScheduleDTO{
+export interface ScheduleDTO {
   id: string;
   daytime: string;
-  hall: number;
+  hall: string;
   rows: number;
   seats: number;
   price: number;
@@ -13,10 +13,20 @@ export interface FilmDTO {
   rating: number;
   director: string;
   tags: string[];
-  image: string;
-  cover: string;
   title: string;
   about: string;
   description: string;
+  image: string;
+  cover: string;
   schedule: ScheduleDTO[];
+}
+
+export interface FilmResponseDTO {
+  total: number;
+  items: Omit<FilmDTO, 'schedule'>[];
+}
+
+export interface FilmScheduleResponseDTO {
+  total: number;
+  items: ScheduleDTO[];
 }
