@@ -6,11 +6,7 @@ import { configProvider } from './app.config.provider';
 import { databaseProvider } from './database/database.provider';
 import { FilmsModule } from './films/films.module';
 import { OrderModule } from './order/order.module';
-import { OrderService } from './order/order.service';
-import { FilmsService } from './films/films.service';
-import { OrderController } from './order/order.controller';
-import { FilmsController } from './films/films.controller';
-import { FilmsMongoDbRepository } from './repository/films/films';
+
 
 @Module({
   imports: [
