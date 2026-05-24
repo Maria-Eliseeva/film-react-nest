@@ -1,4 +1,4 @@
-export interface ScheduleDTO {
+export class ScheduleDTO {
   id: string;
   daytime: string;
   hall: string;
@@ -8,7 +8,7 @@ export interface ScheduleDTO {
   taken: string[];
 }
 
-export interface FilmDTO {
+export class FilmDTO {
   id: string;
   rating: number;
   director: string;
@@ -21,12 +21,12 @@ export interface FilmDTO {
   schedule: ScheduleDTO[];
 }
 
-export interface FilmResponseDTO {
+export class FilmResponseDTO {
   total: number;
   items: Omit<FilmDTO, 'schedule'>[];
 }
 
-export interface FilmScheduleResponseDTO {
+export class FilmScheduleResponseDTO {
   total: number;
   items: ScheduleDTO[];
 }

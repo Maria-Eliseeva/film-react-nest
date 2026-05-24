@@ -1,4 +1,4 @@
-export interface TicketDTO {
+export class TicketDTO {
   film: string;
   session: string;
   daytime: string;
@@ -7,13 +7,13 @@ export interface TicketDTO {
   price: number;
 }
 
-export interface OrderRequestDTO {
+export class OrderRequestDTO {
   email: string;
   phone: string;
   tickets: TicketDTO[];
 }
 
-export interface OrderResponseDTO {
+export class OrderResponseDTO {
   total: number;
   items: (TicketDTO & { id: string })[];
 }

@@ -29,12 +29,14 @@ export class OrderService {
       if (session.taken.includes(seat)) {
         throw new BadRequestException({ error: `Место уже занято` });
       }
+    }
 
-      session.taken.push(seat);
-
-      await this.filmsRepository.update(ticket.film, {
-        schedule: film.schedule,
-      });
+    for (const ticket of order.tickets) {
+      const seat = `${ticket.row}:${ticket.seat}`;
+      const reservedFilm = await this.filmsRepository.reserveSeat(ticket.film, ticket.session, seat);
+      if (!reservedFilm) {
+        throw new BadRequestException({ error: `ошибка при бронировании места` });
+      }
     }
 
     const items = order.tickets.map((ticket) => ({

@@ -72,6 +72,14 @@ export class FilmsMongoDbRepository implements FilmsRepository {
       .findOneAndUpdate({ id }, data, { new: true, projection: { _id: false } })
       .lean();
   }
+  
+  async reserveSeat(filmId: string, sessionId: string, seat: string): Promise<FilmDTO | null> {
+  return this.filmModel.findOneAndUpdate(
+    { id: filmId, 'schedule.id': sessionId, 'schedule.taken': { $ne: seat } },
+    { $push: { 'schedule.$.taken': seat } },
+    { new: true, projection: { _id: false } }
+  ).lean();
+}
 
   async delete(id: string): Promise<void> {
     await this.filmModel.deleteOne({ id });

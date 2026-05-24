@@ -25,13 +25,10 @@ import { FilmsMongoDbRepository } from './repository/films/films';
     FilmsModule,
     OrderModule,
   ],
-  controllers: [OrderController, FilmsController],
+  controllers: [],
   providers: [
     configProvider,
     databaseProvider,
-    OrderService,
-    FilmsService,
-    FilmsMongoDbRepository,
   ],
 })
 export class AppModule {}
