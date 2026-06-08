@@ -1,32 +1,23 @@
-import {
-  BadRequestException,
-  Injectable,
-  NotFoundException,
-} from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import {
   FilmDTO,
   FilmResponseDTO,
   FilmScheduleResponseDTO,
 } from './dto/films.dto';
-import { FilmsMongoDbRepository } from '../repository/films/films';
+import { FilmsTypeOrmRepository } from '../repository/films/films';
 
 @Injectable()
 export class FilmsService {
-  constructor(private readonly filmsRepository: FilmsMongoDbRepository) {}
-
-  async create(data: Omit<FilmDTO, 'id'>): Promise<FilmDTO> {
-    try {
-      return await this.filmsRepository.save(data);
-    } catch (e) {
-      throw new BadRequestException({ error: `ошибка создания фильма` });
-    }
-  }
+  constructor(private readonly filmsRepository: FilmsTypeOrmRepository) {}
 
   async findAll(): Promise<FilmResponseDTO> {
     const films = await this.filmsRepository.findAll();
     return {
       total: films.length,
-      items: films.map(({ schedule, ...film }) => film),
+      items: films.map(({ schedule, ...film }) => ({
+        ...film,
+        schedule: schedule ?? [],
+      })),
     };
   }
 
@@ -36,14 +27,19 @@ export class FilmsService {
     if (!film) {
       throw new NotFoundException('Фильм не найден');
     }
-
     return {
-      total: film.schedule.length,
-      items: film.schedule,
+      total: film.schedule?.length ?? 0,
+      items: film.schedule ?? [],
     };
   }
 
   async findById(id: string): Promise<FilmDTO | null> {
-    return this.filmsRepository.findById(id);
+    const film = await this.filmsRepository.findById(id);
+    if (!film) return null;
+
+    return {
+      ...film,
+      schedule: film.schedule ?? [],
+    };
   }
 }

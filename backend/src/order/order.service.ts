@@ -1,10 +1,10 @@
 import { Injectable, BadRequestException } from '@nestjs/common';
 import { OrderRequestDTO, OrderResponseDTO } from './dto/order.dto';
-import { FilmsMongoDbRepository } from '../repository/films/films';
+import { FilmsTypeOrmRepository } from '../repository/films/films';
 
 @Injectable()
 export class OrderService {
-  constructor(private readonly filmsRepository: FilmsMongoDbRepository) {}
+  constructor(private readonly filmsRepository: FilmsTypeOrmRepository) {}
 
   async create(order: OrderRequestDTO): Promise<OrderResponseDTO> {
     if (!order.tickets || order.tickets.length === 0) {
@@ -33,9 +33,15 @@ export class OrderService {
 
     for (const ticket of order.tickets) {
       const seat = `${ticket.row}:${ticket.seat}`;
-      const reservedFilm = await this.filmsRepository.reserveSeat(ticket.film, ticket.session, seat);
+      const reservedFilm = await this.filmsRepository.reserveSeat(
+        ticket.film,
+        ticket.session,
+        seat,
+      );
       if (!reservedFilm) {
-        throw new BadRequestException({ error: `ошибка при бронировании места` });
+        throw new BadRequestException({
+          error: `ошибка при бронировании места`,
+        });
       }
     }
 

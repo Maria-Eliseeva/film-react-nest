@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { ConfigModule } from '@nestjs/config';
 import * as path from 'node:path';
 import { configProvider } from './app.config.provider';
-import { databaseProvider } from './database/database.provider';
 import { FilmsModule } from './films/films.module';
 import { OrderModule } from './order/order.module';
-
+import { AppDataSource } from './ormconfig';
 
 @Module({
   imports: [
@@ -18,13 +18,13 @@ import { OrderModule } from './order/order.module';
       rootPath: path.join(__dirname, '..', 'public', 'content', 'afisha'),
       serveRoot: '/content/afisha',
     }),
+    TypeOrmModule.forRoot({
+      ...AppDataSource.options,
+    }),
     FilmsModule,
     OrderModule,
   ],
   controllers: [],
-  providers: [
-    configProvider,
-    databaseProvider,
-  ],
+  providers: [configProvider],
 })
 export class AppModule {}
