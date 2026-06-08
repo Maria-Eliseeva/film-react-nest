@@ -14,5 +14,5 @@ export const AppDataSource = new DataSource({
   database: 'prac',
   entities: [Film, Schedule],
   migrations: ['src/database/migrations/*.ts'],
-  synchronize: true,
+  synchronize: process.env.NODE_ENV !== 'production',
 });
