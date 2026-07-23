@@ -65,14 +65,24 @@ services:
     container_name: nginx
     ports:
       - "80:80"
+      - "443:443"
     networks:
       - webnet
     restart: always
     volumes:
       - frontend_dist:/var/www/frontend:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
     depends_on:
       - frontend
       - backend
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot:rw
+      - ./certbot/conf:/etc/letsencrypt:rw
 
 volumes:
   postgres_data:
