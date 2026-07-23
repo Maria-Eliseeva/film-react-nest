@@ -1,0 +1,78 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: "/api/afisha"
+    image: ghcr.io/maria-eliseeva/film-react-nest-frontend:latest
+    container_name: frontend
+    networks:
+      - webnet
+    volumes:
+      - frontend_dist:/app/dist
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: ghcr.io/maria-eliseeva/film-react-nest-backend:latest
+    container_name: backend
+    networks:
+      - webnet
+    environment:
+      - DATABASE_URL=postgres://prac:prac@postgres:5432/prac
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=prac
+      - POSTGRES_PASSWORD=prac
+      - POSTGRES_DB=prac
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - webnet
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - webnet
+    depends_on:
+      - postgres
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: ghcr.io/maria-eliseeva/film-react-nest-nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+    networks:
+      - webnet
+    restart: always
+    volumes:
+      - frontend_dist:/var/www/frontend:ro
+    depends_on:
+      - frontend
+      - backend
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  frontend_dist:
+
+networks:
+  webnet:
