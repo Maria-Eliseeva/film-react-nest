@@ -21,7 +21,12 @@ services:
     networks:
       - webnet
     environment:
-      - DATABASE_URL=postgres://prac:prac@postgres:5432/prac
+      - DATABASE_DRIVER=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=prac
+      - DATABASE_PASSWORD=prac
+      - DATABASE_DATABASE=prac
     depends_on:
       - postgres
 
