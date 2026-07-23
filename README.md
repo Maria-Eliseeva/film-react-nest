@@ -1,5 +1,10 @@
 # FILM!
 
+## Деплой
+
+- Основное приложение: [https://film.mary.nomorepartiessite.ru](https://film.mary.nomorepartiessite.ru)
+- API: [https://api.film.mary.nomorepartiessite.ru/api/afisha](https://api.film.mary.nomorepartiessite.ru/api/afisha)
+
 ## Установка
 
 ### MongoDB
