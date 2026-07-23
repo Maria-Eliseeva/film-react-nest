@@ -4,7 +4,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
       args:
-        VITE_API_URL: "/api/afisha"
+        VITE_API_URL: "https://api.film.mary.nomorepartiessite.ru/api/afisha"
     image: ghcr.io/maria-eliseeva/film-react-nest-frontend:latest
     container_name: frontend
     networks:
