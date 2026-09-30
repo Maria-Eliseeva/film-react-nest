@@ -1,0 +1,93 @@
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: "https://api.film.mary.nomorepartiessite.ru/api/afisha"
+    image: ghcr.io/maria-eliseeva/film-react-nest-frontend:latest
+    container_name: frontend
+    networks:
+      - webnet
+    volumes:
+      - frontend_dist:/app/dist
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: ghcr.io/maria-eliseeva/film-react-nest-backend:latest
+    container_name: backend
+    networks:
+      - webnet
+    environment:
+      - DATABASE_DRIVER=postgres
+      - DATABASE_HOST=postgres
+      - DATABASE_PORT=5432
+      - DATABASE_USERNAME=prac
+      - DATABASE_PASSWORD=prac
+      - DATABASE_DATABASE=prac
+    depends_on:
+      - postgres
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: postgres
+    environment:
+      - POSTGRES_USER=prac
+      - POSTGRES_PASSWORD=prac
+      - POSTGRES_DB=prac
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - webnet
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: pgadmin
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=admin@admin.com
+      - PGADMIN_DEFAULT_PASSWORD=admin
+    ports:
+      - "8080:80"
+    volumes:
+      - pgadmin_data:/var/lib/pgadmin
+    networks:
+      - webnet
+    depends_on:
+      - postgres
+
+  nginx:
+    build:
+      context: ./nginx
+      dockerfile: Dockerfile
+    image: ghcr.io/maria-eliseeva/film-react-nest-nginx:latest
+    container_name: nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    networks:
+      - webnet
+    restart: always
+    volumes:
+      - frontend_dist:/var/www/frontend:ro
+      - ./certbot/www:/var/www/certbot:ro
+      - ./certbot/conf:/etc/letsencrypt:ro
+    depends_on:
+      - frontend
+      - backend
+
+  certbot:
+    image: certbot/certbot:latest
+    container_name: certbot
+    volumes:
+      - ./certbot/www:/var/www/certbot:rw
+      - ./certbot/conf:/etc/letsencrypt:rw
+
+volumes:
+  postgres_data:
+  pgadmin_data:
+  frontend_dist:
+
+networks:
+  webnet:

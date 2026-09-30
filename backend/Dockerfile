@@ -1,0 +1,26 @@
+FROM node:20-alpine AS builder
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+RUN yarn install
+
+COPY . .
+
+RUN yarn build
+
+FROM node:20-alpine AS production
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+
+RUN yarn install --production
+
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/public ./public
+
+EXPOSE 3000
+
+CMD ["node", "dist/main"]

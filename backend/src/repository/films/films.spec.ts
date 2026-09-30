@@ -1,12 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { FilmsMongoDbRepository as FilmsRepository } from './films';
+import { FilmsTypeOrmRepository as FilmsRepository } from './films';
+import { getRepositoryToken } from '@nestjs/typeorm';
+import { Film } from '../../entity/Film';
+import { Schedule } from '../../entity/Schedule';
 
 describe('FilmsRepository', () => {
   let provider: FilmsRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FilmsRepository],
+      providers: [
+        FilmsRepository,
+        { provide: getRepositoryToken(Film), useValue: {} },
+        { provide: getRepositoryToken(Schedule), useValue: {} },
+      ],
     }).compile();
 
     provider = module.get<FilmsRepository>(FilmsRepository);

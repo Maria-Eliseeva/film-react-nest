@@ -1,12 +1,19 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { FilmsService } from './films.service';
+import { FilmsTypeOrmRepository } from '../repository/films/films';
 
 describe('FilmsService', () => {
   let service: FilmsService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [FilmsService],
+      providers: [
+        FilmsService,
+        {
+          provide: FilmsTypeOrmRepository,
+          useValue: { findAll: jest.fn(), findById: jest.fn() },
+        },
+      ],
     }).compile();
 
     service = module.get<FilmsService>(FilmsService);
